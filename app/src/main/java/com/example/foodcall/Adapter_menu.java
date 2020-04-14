@@ -6,8 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +50,7 @@ public class Adapter_menu extends ArrayAdapter {
 
     public Adapter_menu(@NonNull Context context, int resource, @NonNull List<menu_class> objects) {
         super(context, resource, objects);
-        this.context=getContext();
+        this.context = getContext();
         this.mResource = resource;
         menuClassList = objects;
     }
@@ -70,10 +72,11 @@ public class Adapter_menu extends ArrayAdapter {
             convertView.setTag(viewHolder);
 
         } else {
-
             viewHolder = (ViewHolderItem) convertView.getTag();
-
         }
+        menu_class temp = menuClassList.get(position);
+        viewHolder.Item.setText(temp.getItemName());
+        viewHolder.price.setText(temp.getPrice());
         return convertView;
     }
 
@@ -97,7 +100,7 @@ public class Adapter_menu extends ArrayAdapter {
     static class ViewHolderItem {
         TextView Item;
         TextView price;
-        
+
     }
 }
 

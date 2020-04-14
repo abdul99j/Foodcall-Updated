@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/parent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/food_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:text="Food Name"
+        android:textColor="@color/design_default_color_on_secondary" />
+
+    <Button
+        android:id="@+id/add"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginLeft="200dp"
+        android:layout_marginTop="20dp"
+        android:layout_toRightOf="@id/food_name"
+        android:background="@drawable/ic_arrow_upward_black_24dp" />
+
+    <TextView
+        android:id="@+id/count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_toRightOf="@id/add"
+        android:text="0"
+        android:textColor="@color/design_default_color_on_secondary"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/minus"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_toRightOf="@id/count"
+        android:background="@drawable/ic_arrow_downward_black_24dp" />
+
+</RelativeLayout>
