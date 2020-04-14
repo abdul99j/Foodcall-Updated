@@ -10,8 +10,8 @@
     <string name="menu_home">Home</string>
     <string name="menu_orders">Orders</string>
     <string name="HelpCenter">Help Center</string>
-    <string name="AboutUs" >About Us</string>
+    <string name="AboutUs">About Us</string>
     <string name="LogOut">Log Out</string>
-    <string name="MyAddresses" >My Addresses</string>
+    <string name="MyAddresses">My Addresses</string>
     <string name="Communicate">Communicate</string>
 </resources>
