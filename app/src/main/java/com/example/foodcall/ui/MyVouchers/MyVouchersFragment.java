@@ -1,4 +1,4 @@
-package com.example.foodcall.ui.AboutUs;
+package com.example.foodcall.ui.MyVouchers;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,19 +11,19 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+
 import com.example.foodcall.R;
 
-public class AboutUsFragment extends Fragment {
+public class MyVouchersFragment extends Fragment {
 
-    private AboutUsViewModel sendViewModel;
+    private MyVouchersViewModel myVouchersViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        sendViewModel =
-                ViewModelProviders.of(this).get(AboutUsViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_aboutus, container, false);
-        final TextView textView = root.findViewById(R.id.aboutus);
-        sendViewModel.getText().observe(this, new Observer<String>() {
+        myVouchersViewModel = ViewModelProviders.of(this).get(MyVouchersViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_myaddresses, container, false);
+        final TextView textView = root.findViewById(R.id.nav_myaddresses);
+        myVouchersViewModel.getText().observe(this, new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);

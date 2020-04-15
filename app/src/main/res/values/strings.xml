@@ -25,12 +25,13 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="prompt_name">Name</string>
+    <string name="MyVouchers">My Vouchers</string>
 
     <string-array name="cities">
         <item>Lahore</item>
         <item>Islamabad</item>
         <item>Karachi</item>
-        <item>Multan</item>
+        <item>Sargodha</item>
     </string-array>
 
 

@@ -24,7 +24,7 @@ public class SignUp extends AppCompatActivity {
         Spinner city=findViewById(R.id.city);
 
         ArrayAdapter<String> myAdapter=new ArrayAdapter<>(SignUp.this,
-                android.R.layout.simple_list_item_1,getResources().getStringArray(R.array.cities));
+                R.layout.spinner_layout,getResources().getStringArray(R.array.cities));
         myAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         city.setAdapter(myAdapter);
     }
