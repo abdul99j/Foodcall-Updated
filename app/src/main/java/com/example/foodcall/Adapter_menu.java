@@ -5,42 +5,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-
-class menu_class {
-
-    String itemName;
-    String price;
-
-    public menu_class(String itemName, String price) {
-        this.itemName = itemName;
-        this.price = price;
-    }
-
-    public String getItemName() {
-        return itemName;
-    }
-
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
-    }
-
-    public String getPrice() {
-        return price;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
-
-}
 
 public class Adapter_menu extends ArrayAdapter {
 
@@ -57,17 +30,30 @@ public class Adapter_menu extends ArrayAdapter {
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
-        ViewHolderItem viewHolder;
+        ViewHolderItem viewHolder = new ViewHolderItem();
 
         if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(context);
             convertView = inflater.inflate(mResource, parent, false);
 
-            viewHolder = new ViewHolderItem();
             viewHolder.Item = (TextView) convertView.findViewById(R.id.itemname);
             viewHolder.price = (TextView) convertView.findViewById(R.id.price);
+            viewHolder.selected=(CheckBox) convertView.findViewById(R.id.checkBox2);
+
+
+            viewHolder.selected.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(context, "Checkbox " + position + " clicked!", Toast.LENGTH_SHORT).show();
+
+                    menuClassList.get(position).setSelected(true);
+
+                }
+            });
+
+
 
             convertView.setTag(viewHolder);
 
@@ -100,6 +86,7 @@ public class Adapter_menu extends ArrayAdapter {
     static class ViewHolderItem {
         TextView Item;
         TextView price;
+        CheckBox selected;
 
     }
 }
