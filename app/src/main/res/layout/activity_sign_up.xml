@@ -155,21 +155,55 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/street_addr" />
 
-        <Button
-            android:id="@+id/signup"
-            android:layout_width="150dp"
+        <EditText
+            android:id="@+id/customer"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_marginStart="48dp"
-            android:layout_marginTop="28dp"
-            android:layout_marginEnd="48dp"
-            android:background="@drawable/transparent_bg_bordered"
-            android:enabled="false"
-            android:text="Sign Up"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="24dp"
+            android:backgroundTint="@color/colorAccent"
+            android:hint="Type 'Yes' for vendor only"
             android:textColor="@color/colorAccent"
+            android:textColorHint="#7FFFFFFF"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/city" />
+
+        <ProgressBar
+            android:id="@+id/loading_signUp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="387dp"
+            android:layout_marginLeft="387dp"
+            android:layout_marginTop="64dp"
+            android:layout_marginEnd="411dp"
+            android:layout_marginRight="411dp"
+            android:layout_marginBottom="64dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/city" /> />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.3" />
+
+        <Button
+            android:id="@+id/signup"
+            android:layout_width="88dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="48dp"
+            android:layout_marginLeft="48dp"
+            android:layout_marginTop="60dp"
+            android:layout_marginEnd="48dp"
+            android:layout_marginRight="48dp"
+            android:text="Sign Up"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/city" />
+        />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
