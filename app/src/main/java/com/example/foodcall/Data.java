@@ -2,17 +2,26 @@ package com.example.foodcall;
 
 public class Data {
     private Integer image_Recycle;
-    private String image_Name;
-    private String image_Price;
+    private String name;
+    private String price;
+    private String vendor_UID;
 
     public Data() {
 
     }
 
-    public Data(Integer image_Recycle, String image_Name, String image_Price) {
+    public Data(Integer image_Recycle, String name, String price) {
         this.image_Recycle = image_Recycle;
-        this.image_Name = image_Name;
-        this.image_Price = image_Price;
+        this.name = name;
+        this.price = price;
+    }
+
+    public String getVendor_UID() {
+        return vendor_UID;
+    }
+
+    public void setVendor_UID(String vendor_UID) {
+        this.vendor_UID = vendor_UID;
     }
 
     public Integer getImage_Recycle() {
@@ -23,19 +32,19 @@ public class Data {
         this.image_Recycle = image_Recycle;
     }
 
-    public String getImage_Name() {
-        return image_Name;
+    public String getName() {
+        return name;
     }
 
-    public void setImage_Name(String image_Name) {
-        this.image_Name = image_Name;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getImage_Price() {
-        return image_Price;
+    public String getPrice() {
+        return price;
     }
 
-    public void setImage_Price(String image_Price) {
-        this.image_Price = image_Price;
+    public void setPrice(String price) {
+        this.price = price;
     }
 }

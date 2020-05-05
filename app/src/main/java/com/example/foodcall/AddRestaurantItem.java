@@ -62,7 +62,7 @@ public class AddRestaurantItem extends AppCompatActivity {
                     DatabaseReference myRef = mFirebaseDatabase.getReference();
                     uid = mAuth.getCurrentUser().getUid();
 
-                    Item temp1 = new Item(item_name, item_price, null);
+                    Item temp1 = new Item(item_name, item_price);
                     Log.d(TAG, "onClick : Add Item" + temp1.name + " " + temp1.price);
                     myRef.child("users").child(uid).child("menu").push().setValue(temp1);
                     finish();

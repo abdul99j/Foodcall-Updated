@@ -3,13 +3,18 @@ package com.example.foodcall;
 public class Item {
     String name;
     String price;
-    String quantity;
+    int quantity;
 
     public Item(){
 
     }
 
-    public Item(String name, String price, String quantity) {
+    public Item(String name, String price) {
+        this.name = name;
+        this.price = price;
+    }
+
+    public Item(String name, String price, int quantity) {
         this.name = name;
         this.price = price;
         this.quantity = quantity;
@@ -31,11 +36,11 @@ public class Item {
         this.price = price;
     }
 
-    public String getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(String quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 }

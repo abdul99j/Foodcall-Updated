@@ -1,6 +1,7 @@
 package com.example.foodcall;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +13,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,21 +83,20 @@ public class RecyclerView_CustomerView extends RecyclerView.Adapter<RecyclerView
         final Data obj = filter_list.get(position);
 
         ((RecyclerView_CustomerView.ViewHolder) holder).image.setBackgroundResource(obj.getImage_Recycle());
-        ((RecyclerView_CustomerView.ViewHolder) holder).res_name.setText(obj.getImage_Name());
-        ((RecyclerView_CustomerView.ViewHolder) holder).delivery_price.setText(obj.getImage_Price());
+        ((RecyclerView_CustomerView.ViewHolder) holder).res_name.setText(obj.getName());
+        ((RecyclerView_CustomerView.ViewHolder) holder).delivery_price.setText(obj.getPrice());
         ((RecyclerView_CustomerView.ViewHolder) holder).layout_Parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "on Click: clicked on: " + obj.getImage_Name());
+                Log.d(TAG, "on Click: clicked on: " + obj.getName());
 
-                //Toast.makeText(context,image_Name.get(position),Toast.LENGTH_SHORT).show();
                 View temp = holder.itemView;
-//                Intent i = new Intent(context, Info_Screen.class);
-//                i.putExtra("image", image_Recycle.get(position));
-//                i.putExtra("name", image_Name.get(position));
+                Intent i = new Intent(context, Menu.class);
+                i.putExtra("uid", obj.getVendor_UID());
+                i.putExtra("name", obj.getName());
 //                i.putExtra("contact", image_Contact.get(position));
 //                i.putExtra("email", image_Email.get(position));
-//                context.startActivity(i);
+                context.startActivity(i);
             }
         });
     }
@@ -116,7 +123,7 @@ public class RecyclerView_CustomerView extends RecyclerView.Adapter<RecyclerView
                 ArrayList<Data> filteredList = new ArrayList<>();
 
                 for (int i = 0; i < list.size(); i++) {
-                    if (list.get(i).getImage_Name().contains(constraint.toString())) {
+                    if (list.get(i).getName().contains(constraint.toString())) {
                         filteredList.add(list.get(i));
                     }
                 }
@@ -143,7 +150,7 @@ public class RecyclerView_CustomerView extends RecyclerView.Adapter<RecyclerView
         ImageView image;
         TextView res_name;
         TextView delivery_price;
-        RelativeLayout layout_Parent;
+        ConstraintLayout layout_Parent;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

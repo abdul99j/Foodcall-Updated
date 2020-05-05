@@ -40,19 +40,21 @@ public class Adapter_menu extends ArrayAdapter {
 
             viewHolder.Item = (TextView) convertView.findViewById(R.id.itemname);
             viewHolder.price = (TextView) convertView.findViewById(R.id.price);
-            viewHolder.selected=(CheckBox) convertView.findViewById(R.id.checkBox2);
+            viewHolder.selected = (CheckBox) convertView.findViewById(R.id.checkBox2);
 
 
             viewHolder.selected.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(context, "Checkbox " + position + " clicked!", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, "Checkbox " + position + " clicked!", Toast.LENGTH_SHORT).show();
 
-                    menuClassList.get(position).setSelected(true);
-
+                    if (!menuClassList.get(position).getSelected()) {
+                        menuClassList.get(position).setSelected(true);
+                    }
+                    else
+                        menuClassList.get(position).setSelected(false);
                 }
             });
-
 
 
             convertView.setTag(viewHolder);

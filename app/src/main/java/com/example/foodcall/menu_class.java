@@ -5,6 +5,19 @@ public class menu_class {
     String itemName;
     String price;
     Boolean isSelected;
+    String item_id;
+
+    public menu_class(){
+
+    }
+
+    public String getItem_id() {
+        return item_id;
+    }
+
+    public void setItem_id(String item_id) {
+        this.item_id = item_id;
+    }
 
     public menu_class(String itemName, String price, Boolean isSelected) {
         this.itemName = itemName;

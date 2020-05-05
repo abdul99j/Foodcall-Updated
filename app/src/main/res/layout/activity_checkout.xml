@@ -111,13 +111,15 @@
                     android:id="@+id/radioButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Cash on Delivery" />
+                    android:text="Cash on Delivery"
+                    android:buttonTint="@color/colorPrimary"/>
 
                 <RadioButton
                     android:id="@+id/radioButton2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Card" />
+                    android:text="Card"
+                    android:buttonTint="@color/colorPrimary"/>
             </RadioGroup>
 
             <TextView
@@ -148,7 +150,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView11" />
 
             <TextView
-                android:id="@+id/textView13"
+                android:id="@+id/tot_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -189,7 +191,7 @@
         app:layout_constraintTop_toTopOf="@+id/bottom_bar" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/confirm_order"
         android:layout_width="150dp"
         android:layout_height="40dp"
         android:layout_marginEnd="30dp"

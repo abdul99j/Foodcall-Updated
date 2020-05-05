@@ -1,9 +1,11 @@
 package com.example.foodcall.ui.home;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -33,6 +35,7 @@ import com.example.foodcall.Menu;
 import com.example.foodcall.R;
 import com.example.foodcall.RecyclerView_CustomerView;
 import com.example.foodcall.RecyclerView_Restaurant;
+import com.example.foodcall.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -53,11 +56,12 @@ public class HomeFragment extends Fragment {
     private ArrayList<String> mNames = new ArrayList<>();
     private ArrayList<String> mPrice = new ArrayList<>();
 
-    List<Data> list=new ArrayList<>();
+    List<Data> list = new ArrayList<>();
+    List<User> all_users = new ArrayList<>();
 
     private HomeViewModel homeViewModel;
     private ImageView imageView;
-    String uid;
+    //String uid;
 
     View root;
 
@@ -79,108 +83,20 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        Log.d(TAG,"Inside onCreate");
 
-        imageView = (ImageView) root.findViewById(R.id.res_img);
-//        imageView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(getContext(), Menu.class);
-//                startActivity(intent);
-//            }
-//        });
-
-        Data obj1 = new Data(R.drawable.kfc,"KFC DHA","Free Delivery");
-        Data obj2 = new Data(R.drawable.kfc,"McDonalds","50 Delivery");
-//        mImageUrls.add(R.drawable.kfc);
-//        mNames.add("KFC DHA");
-//        mPrice.add("Free Delivery");
-//
-//        mImageUrls.add(R.drawable.mcdonalds);
-//        mNames.add("McDonalds DHA");
-//        mPrice.add("Rs. 50 per delivery");
-
-
-        list.add(obj1);
-        list.add(obj2);
-
-        initRecyclerView(root);
-//        }
-//        else
-//        {
-//            root = inflater.inflate(R.layout.activity_main__restaurant, container, false);
-//            FloatingActionButton fab = root.findViewById(R.id.floatingActionButton);
-//
-//            //Add restaurant item button
-//            fab.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Intent i = new Intent(getContext(), AddRestaurantItem.class);
-//                    startActivity(i);
-//                }
-//            });
-//
-//
-//            //Logout btn
-//            Button btn = root.findViewById(R.id.button4);
-//            btn.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    FirebaseAuth mAuth = FirebaseAuth.getInstance();
-//                    mAuth.signOut();
-//                    Intent i = new Intent(getContext(), Login_SignUp.class);
-//                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                    startActivity(i);
-//                }
-//            });
-//
-//            initData(root);
-//        }
-        return root;
-    }
-
-    private void initRecyclerView(View view) {
-        Log.d(TAG, "initRecyclerView: init recyclerview_CustomerView.");
-        RecyclerView recyclerView = view.findViewById(R.id.recycler_home_fragment);
-
-        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(),
-                DividerItemDecoration.VERTICAL));
-        final RecyclerView_CustomerView adapter = new RecyclerView_CustomerView(list, getContext());
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        final EditText search_bar;
-        search_bar = root.findViewById(R.id.searchbar);
-
-        Button btn = root.findViewById(R.id.search_btn);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "inside OnClick");
-                Toast.makeText(getContext(), "Toast generated", Toast.LENGTH_SHORT).show();
-
-                adapter.getFilter().filter(search_bar.getText().toString());
-            }
-        });
-
-
-    }
-
-    private void initData(View view) {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        uid = mAuth.getCurrentUser().getUid();
+        //uid = mAuth.getCurrentUser().getUid();
         FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = mFirebaseDatabase.getReference().child("users").child(uid).child("menu");
+        DatabaseReference myRef = mFirebaseDatabase.getReference().child("users");
 
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-//                String value = dataSnapshot.getValue(String.class);
-//                Log.d(TAG, "Value is: " + value);
-                showData(dataSnapshot);
-                initRecyclerView_Vendor();
+                Log.d(TAG,"onDataChanged called for Users");
+                all_users.clear();
+                list.clear();
+                showUserData(dataSnapshot);
             }
 
             @Override
@@ -189,36 +105,81 @@ public class HomeFragment extends Fragment {
                 Log.w(TAG, "Failed to read value.", error.toException());
             }
         });
-
+        return root;
     }
 
-    private void showData(DataSnapshot dataSnapshot) {
-        mImageUrls.clear();
-        mNames.clear();
-        mPrice.clear();
-        for (DataSnapshot ds : dataSnapshot.getChildren()) {
-            Item data = new Item();
-            data.setName(ds.getValue(Item.class).getName());
-            data.setPrice(ds.getValue(Item.class).getPrice());
-//            data.name = ds.getValue(Item.class).getName();
-//            data.price = ds.getValue(Item.class).getPrice();
+    private void initRecyclerView(View view) {
+        Log.d(TAG, "initRecyclerView: init recyclerview_CustomerView.");
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_home_fragment);
 
-            mImageIcons.add(ds.getKey());
-            mNames.add(data.getName());
-            mPrice.add(data.getPrice());
-
-            Log.d(TAG, " : inside showData " + ds.getKey() + " " + data.getName() + " " + data.getPrice());
-        }
-    }
-
-    private void initRecyclerView_Vendor() {
-        Log.d(TAG, "initRecyclerView: init recyclerview.");
-        RecyclerView recyclerView = root.findViewById(R.id.recycler_view_restaurant);
-        RecyclerView_Restaurant adapter = new RecyclerView_Restaurant(mImageIcons, mNames, mPrice, getContext());
+//        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),
+//                DividerItemDecoration.VERTICAL));
+        final RecyclerView_CustomerView adapter = new RecyclerView_CustomerView(list, getContext());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        final EditText search_bar;
+        search_bar = root.findViewById(R.id.searchbar);
 
+        Button btn = root.findViewById(R.id.search_btn);
+        btn.setOnTouchListener(new View.OnTouchListener() {
+
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN: {
+                        v.getBackground().setColorFilter(0xe0f47521, PorterDuff.Mode.SRC_ATOP);
+                        v.invalidate();
+                        break;
+                    }
+                    case MotionEvent.ACTION_UP: {
+                        v.getBackground().clearColorFilter();
+                        v.invalidate();
+                        break;
+                    }
+                }
+                return false;
+            }
+        });
+
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "inside OnClick");
+//                Toast.makeText(getContext(), "Toast generated", Toast.LENGTH_SHORT).show();
+                adapter.getFilter().filter(search_bar.getText().toString());
+            }
+        });
+
+
+    }
+
+    private void showUserData(DataSnapshot dataSnapshot) {
+        Log.d(TAG,"inside showUserData");
+        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+            User temp = new User();
+            temp = ds.getValue(User.class);
+            temp.setUID(ds.getKey());
+            all_users.add(temp);
+            Log.d(TAG, " : inside showUserData " + ds.getKey());
+        }
+        populateDataForRecyclerView();
+    }
+
+    private void populateDataForRecyclerView() {
+        for (User user : all_users) {
+            Log.d(TAG,"inside populateDataForRecycler() : Found user: " + user.getUID());
+            if (user.getCustomer() == false)
+            {
+                Log.d(TAG,"inside populateDataForRecycler() : Found vendor: " + user.getUID());
+                Data data=new Data();
+                data.setImage_Recycle(R.drawable.kfc);
+                data.setName(user.getName());
+                data.setPrice("Free Delivery");
+                data.setVendor_UID(user.getUID());
+                list.add(data);
+            }
+        }
+        initRecyclerView(root);
     }
 }
 
