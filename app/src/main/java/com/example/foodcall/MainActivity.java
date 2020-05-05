@@ -1,8 +1,10 @@
 package com.example.foodcall;
 
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.foodcall.ui.Orders.OrdersFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -12,6 +14,8 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.core.view.GravityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -29,7 +33,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity  {
 
     private AppBarConfiguration mAppBarConfiguration;
 
@@ -75,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
         };
-        setNavigationViewListener();
+        //setNavigationViewListener();
     }
 
     @Override
@@ -92,36 +96,54 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 || super.onSupportNavigateUp();
     }
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        Log.d("Nav", "OnClick Called");
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        int id = item.getItemId();
-        if (id == R.id.logout) {
-            Log.d("Nav1", "Button selected. OnClick Called");
-//            Toast.makeText(getApplicationContext(), "Logout clicked", Toast.LENGTH_SHORT).show();
-            FirebaseAuth mAuth = FirebaseAuth.getInstance();
-            mAuth.signOut();
-            Intent i = new Intent(getApplicationContext(), Login_SignUp.class);
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(i);
-        }
-        if (id == R.id.nav_home) {
-            Log.d("Nav1", "Button selected. OnClick Called");
-//            Toast.makeText(getApplicationContext(), "Logout clicked", Toast.LENGTH_SHORT).show();
-            Intent i = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(i);
-        }
+//    @Override
+//    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//        Log.d("Nav", "OnClick Called");
+//        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+//        int id = item.getItemId();
+//        if (id == R.id.logout) {
+//            Log.d("Nav1", "Button selected. OnClick Called");
+////            Toast.makeText(getApplicationContext(), "Logout clicked", Toast.LENGTH_SHORT).show();
+//            FirebaseAuth mAuth = FirebaseAuth.getInstance();
+//            mAuth.signOut();
+//            Intent i = new Intent(getApplicationContext(), Login_SignUp.class);
+//            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            startActivity(i);
+//        }
+//        if (id == R.id.nav_home) {
+//
+//
+//            Log.d("Nav1", "Button selected. OnClick Called");
+////            Toast.makeText(getApplicationContext(), "Logout clicked", Toast.LENGTH_SHORT).show();
+//            Intent i = new Intent(getApplicationContext(), MainActivity.class);
+//            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            startActivity(i);
+//        }
+//
+//        if (id == R.id.nav_orders) {
+//            Log.d("Nav1", "Orders Button selected. OnClick Called");
+////            Toast.makeText(getApplicationContext(), "Logout clicked", Toast.LENGTH_SHORT).show();
+////            Intent i = new Intent(getApplicationContext(), MainActivity);
+////            startActivity(i);
+//
+//            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+//
+//            OrdersFragment ordersFragment = new OrdersFragment();
+//            FragmentManager manager = getSupportFragmentManager();
+//            manager.beginTransaction().replace(R.id.nav_host_fragment, ordersFragment).commit();
+//
+//        }
+//
+//        //Implement for other items in nav bar
+//
+//        drawer.closeDrawer(GravityCompat.START);
+//        return false;
+//    }
 
-        //Implement for other items in nav bar
-
-        drawer.closeDrawer(GravityCompat.START);
-        return false;
-    }
-
-    private void setNavigationViewListener() {
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-    }
+//    private void setNavigationViewListener() {
+//        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+//        navigationView.setNavigationItemSelectedListener(this);
+//    }
 }

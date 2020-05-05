@@ -37,7 +37,10 @@ public class Checkout extends AppCompatActivity {
     private DatabaseReference myRef;
 
     String uid;
+    String u_name;
+    String u_address;
     String vid;
+    String v_name;
 
     static TextView tv;
 
@@ -58,6 +61,8 @@ public class Checkout extends AppCompatActivity {
                 if (user.getUID().contentEquals(mAuth.getCurrentUser().getUid())) {
                     TextView address = findViewById(R.id.textView8);
                     address.setText(user.address + ", " + user.city);
+                    u_address = user.address + ", " + user.city;
+                    u_name = user.name;
                 }
             }
         }
@@ -70,6 +75,7 @@ public class Checkout extends AppCompatActivity {
         ArrayList<String> item_id = extras.getStringArrayList("item_id");
 
         vid = extras.getString("vendor_id");
+        v_name = extras.getString("vendor_name");
         tv = findViewById(R.id.tot_price);
 
         int total = 0;
@@ -118,7 +124,10 @@ public class Checkout extends AppCompatActivity {
                 order.setOrder_total(tv.getText().toString());
                 order.setOrderDate(new Date().toString());
                 order.setCustomer(uid);
+                order.setCustomer_name(u_name);
+                order.setOrder_address(u_address);
                 order.setRestaurant(vid);
+                order.setRestaurant_name(v_name);
 
                 List<Item> total_items = new ArrayList<>();
 

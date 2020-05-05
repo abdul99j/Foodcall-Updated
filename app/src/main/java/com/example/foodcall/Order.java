@@ -6,12 +6,15 @@ import java.util.List;
 
 public class Order {
     String customer;
+    String customer_name;
     String restaurant;
+    String restaurant_name;
     String orderDate;
     String order_total;
-    List<Item> items=new ArrayList<>();
+    String order_address;
+    List<Item> items = new ArrayList<>();
 
-    public Order(){
+    public Order() {
 
     }
 
@@ -21,6 +24,41 @@ public class Order {
         this.orderDate = orderDate;
         this.order_total = order_total;
         this.items = items;
+    }
+
+    public String getOrder_address() {
+        return order_address;
+    }
+
+    public void setOrder_address(String order_address) {
+        this.order_address = order_address;
+    }
+
+    public String getCustomer_name() {
+        return customer_name;
+    }
+
+    public void setCustomer_name(String customer_name) {
+        this.customer_name = customer_name;
+    }
+
+    public String getRestaurant_name() {
+        return restaurant_name;
+    }
+
+    public void setRestaurant_name(String restaurant_name) {
+        this.restaurant_name = restaurant_name;
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "customer='" + customer + '\'' +
+                ", restaurant='" + restaurant + '\'' +
+                ", orderDate='" + orderDate + '\'' +
+                ", order_total='" + order_total + '\'' +
+                ", items=" + items +
+                '}';
     }
 
     public String getOrder_total() {

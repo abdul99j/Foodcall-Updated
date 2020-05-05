@@ -3,9 +3,9 @@ package com.example.foodcall;
 public class Item {
     String name;
     String price;
-    int quantity;
+    int quantity = 0;
 
-    public Item(){
+    public Item() {
 
     }
 
@@ -18,6 +18,15 @@ public class Item {
         this.name = name;
         this.price = price;
         this.quantity = quantity;
+    }
+
+    @Override
+    public String toString() {
+        return "Item{" +
+                "name='" + name + '\'' +
+                ", price='" + price + '\'' +
+                ", quantity=" + quantity +
+                '}';
     }
 
     public String getName() {

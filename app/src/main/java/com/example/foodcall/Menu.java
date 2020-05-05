@@ -69,7 +69,7 @@ public class Menu extends AppCompatActivity {
 
 
         uid = extras.getString("uid");
-        String name = extras.getString("name");
+        final String name = extras.getString("name");
 
         TextView obj = findViewById(R.id.res_name_for_menu);
         obj.setText(name);
@@ -132,6 +132,7 @@ public class Menu extends AppCompatActivity {
                     intent.putExtra("item_price", selected_price);
                     intent.putExtra("item_id", selected_item_id);
                     intent.putExtra("vendor_id", uid);
+                    intent.putExtra("vendor_name", name);
                     Log.d(TAG, "Loading menu for vendor: " + uid);
                     startActivity(intent);
                 } else {

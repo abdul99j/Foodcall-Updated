@@ -58,7 +58,6 @@ public class RecyclerView_Adapter extends RecyclerView.Adapter<RecyclerView.View
 
         ViewHolder temp = (ViewHolder) holder;
 
-        //15:00 in video
         ((ViewHolder) holder).text.setText(itemName.get(position));
         ((ViewHolder) holder).counter.setText(Integer.toString(count.get(position)));
 
