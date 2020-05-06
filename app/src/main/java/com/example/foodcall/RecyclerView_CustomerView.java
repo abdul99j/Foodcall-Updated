@@ -83,11 +83,8 @@ public class RecyclerView_CustomerView extends RecyclerView.Adapter<RecyclerView
 
         final Data obj = filter_list.get(position);
 
-//        if (obj.getImage_Recycle().equals(null))
-//            ((RecyclerView_CustomerView.ViewHolder) holder).image.setBackgroundResource(R.drawable.kfc);
-//        else
-        ((ViewHolder) holder).image.setImageBitmap(obj.getImage_Recycle());
-//        Glide.with(context).load(obj.getImage_Recycle()).into(((ViewHolder) holder).image);
+        Log.d(TAG, "image loading with URI: " + obj.getImage_Recycle());
+        Glide.with(context).load(obj.getImage_Recycle()).into(((ViewHolder) holder).image);
         ((RecyclerView_CustomerView.ViewHolder) holder).res_name.setText(obj.getName());
         ((RecyclerView_CustomerView.ViewHolder) holder).delivery_price.setText(obj.getPrice());
         ((RecyclerView_CustomerView.ViewHolder) holder).layout_Parent.setOnClickListener(new View.OnClickListener() {

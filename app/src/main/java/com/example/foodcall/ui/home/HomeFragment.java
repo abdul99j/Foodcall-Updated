@@ -73,6 +73,9 @@ public class HomeFragment extends Fragment {
 
     Bitmap image = null;
     ProgressDialog load;
+    Data data;
+    Boolean move = false;
+    int i = 0;
     //String uid;
 
     View root;
@@ -112,6 +115,7 @@ public class HomeFragment extends Fragment {
                 all_users.clear();
                 list.clear();
                 showUserData(dataSnapshot);
+                initRecyclerView(root);
             }
 
             @Override
@@ -121,6 +125,99 @@ public class HomeFragment extends Fragment {
             }
         });
         return root;
+    }
+
+    private void showUserData(DataSnapshot dataSnapshot) {
+        Log.d(TAG, "inside showUserData");
+        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+            User temp = new User();
+            temp = ds.getValue(User.class);
+            temp.setUID(ds.getKey());
+            all_users.add(temp);
+            Log.d(TAG, " : inside showUserData " + ds.getKey());
+        }
+        populateDataForRecyclerView();
+    }
+
+    private void populateDataForRecyclerView() {
+        final int count = all_users.size();
+        i = 0;
+        for (final User user : all_users) {
+            Log.d(TAG, "inside populateDataForRecycler() : Found user: " + user.getUID());
+            if (user.getCustomer() == false) {
+                Log.d(TAG, "inside populateDataForRecycler() : Found vendor: " + user.getUID());
+                data = new Data();
+
+                FirebaseStorage store = FirebaseStorage.getInstance();
+                StorageReference image_ref = store.getReference()
+                        .child("images").child("users")
+                        .child("Gzri1BqpCzPLfM9cQ4W3kstT0lC3").child("header.jpg");
+                Log.d(TAG, " : Found reference for image in FireBase Storage");
+
+                if (image_ref != null) {
+//                    image_ref.getBytes(2 * 1024 * 1024)
+//                            .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+//                                @Override
+//                                public void onSuccess(byte[] bytes) {
+//                                    Bitmap temp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+//                                    setBitmap(temp);
+//                                    Log.d(TAG, "Image Read Successful for " + user.getUID() +
+//                                            "with Uri: " + temp.toString());
+//                                }
+//                            }).addOnFailureListener(new OnFailureListener() {
+//                        @Override
+//                        public void onFailure(@NonNull Exception e) {
+//                            //Bitmap temp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+//                            Bitmap temp = null;
+//                            setBitmap(temp);
+//                            Log.d(TAG, "Image Read Failed for " + user.getUID());
+//                        }
+//                    });
+                    image_ref.getDownloadUrl()
+                            .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    Log.d(TAG, "Image Read Successful for " + user.getUID() +
+                                            "with Uri: " + uri.toString());
+                                    getImage(uri.toString(), data, user);
+//                                    if (i == count) {
+//                                        Log.d(TAG, " Setting move to true");
+//                                        move = true;
+//                                    }
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            data.setImage_Recycle(null);
+                            data.setName(user.getName());
+                            data.setPrice("Free Delivery");
+                            data.setVendor_UID(user.getUID());
+                            list.add(data);
+//                            if (i == count) {
+//                                Log.d(TAG, " Setting move to true");
+//                                move = true;
+//                            }
+                        }
+                    });
+                }
+            }
+            i++;
+        }
+        //initRecyclerView(root);
+    }
+
+    void getImage(String uri, Data user, User temp) {
+        if (uri.isEmpty()) {
+            data.setImage_Recycle(null);
+        } else {
+            data.setImage_Recycle(uri.toString());
+            Log.d(TAG, " Reading from variable for " + temp.getUID() +
+                    "with Uri: " + data.getImage_Recycle());
+        }
+        data.setName(user.getName());
+        data.setPrice("Free Delivery");
+        data.setVendor_UID(temp.getUID());
+        list.add(data);
     }
 
     private void initRecyclerView(View view) {
@@ -166,81 +263,6 @@ public class HomeFragment extends Fragment {
         });
 
         load.dismiss();
-    }
-
-    private void showUserData(DataSnapshot dataSnapshot) {
-        Log.d(TAG, "inside showUserData");
-        for (DataSnapshot ds : dataSnapshot.getChildren()) {
-            User temp = new User();
-            temp = ds.getValue(User.class);
-            temp.setUID(ds.getKey());
-            all_users.add(temp);
-            Log.d(TAG, " : inside showUserData " + ds.getKey());
-        }
-        populateDataForRecyclerView();
-    }
-
-    private void populateDataForRecyclerView() {
-        for (final User user : all_users) {
-            Log.d(TAG, "inside populateDataForRecycler() : Found user: " + user.getUID());
-            if (user.getCustomer() == false) {
-                Log.d(TAG, "inside populateDataForRecycler() : Found vendor: " + user.getUID());
-                Data data = new Data();
-
-                FirebaseStorage store = FirebaseStorage.getInstance();
-                StorageReference image_ref = store.getReference()
-                        .child("images").child("users")
-                        .child("Gzri1BqpCzPLfM9cQ4W3kstT0lC3").child("header.jpg");
-                Log.d(TAG, " : Found reference for image in FireBase Storage");
-
-                if (image_ref != null) {
-//                    image_ref.getBytes(2 * 1024 * 1024)
-//                            .addOnSuccessListener(new OnSuccessListener<byte[]>() {
-//                                @Override
-//                                public void onSuccess(byte[] bytes) {
-//                                    Bitmap temp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-//                                    setBitmap(temp);
-//                                    Log.d(TAG, "Image Read Successful for " + user.getUID() +
-//                                            "with Uri: " + temp.toString());
-//                                }
-//                            }).addOnFailureListener(new OnFailureListener() {
-//                        @Override
-//                        public void onFailure(@NonNull Exception e) {
-//                            //Bitmap temp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-//                            Bitmap temp = null;
-//                            setBitmap(temp);
-//                            Log.d(TAG, "Image Read Failed for " + user.getUID());
-//                        }
-//                    });
-
-
-//                    image_ref.getDownloadUrl()
-//                            .addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                                @Override
-//                                public void onSuccess(Uri uri) {
-//                                    Log.d(TAG, "Image Read Successful for " + user.getUID() +
-//                                            "with Uri: " + uri.toString());
-//                                }
-//                            }).addOnFailureListener(new OnFailureListener() {
-//                        @Override
-//                        public void onFailure(@NonNull Exception e) {
-//
-//                        }
-//                    });
-                }
-
-                data.setImage_Recycle(image);
-                data.setName(user.getName());
-                data.setPrice("Free Delivery");
-                data.setVendor_UID(user.getUID());
-                list.add(data);
-            }
-        }
-        initRecyclerView(root);
-    }
-
-    void setBitmap(Bitmap temp) {
-        image = temp;
     }
 }
 
