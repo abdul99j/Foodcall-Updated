@@ -26,6 +26,7 @@ public class RecyclerView_Order_History extends RecyclerView.Adapter<RecyclerVie
     private static final String TAG = "RecyclerV_OrderHist";
 
     private List<Order> items;
+    Boolean vendor_trigger = false;
     private Context context;
 
     //Used to format text for table
@@ -39,6 +40,15 @@ public class RecyclerView_Order_History extends RecyclerView.Adapter<RecyclerVie
     public RecyclerView_Order_History(List<Order> items, Context context) {
         this.items = items;
         this.context = context;
+        this.vendor_trigger = false;
+    }
+
+    public Boolean getVendor_trigger() {
+        return vendor_trigger;
+    }
+
+    public void setVendor_trigger(Boolean vendor_trigger) {
+        this.vendor_trigger = vendor_trigger;
     }
 
     @NonNull
@@ -58,7 +68,11 @@ public class RecyclerView_Order_History extends RecyclerView.Adapter<RecyclerVie
         RecyclerView_Order_History.ViewHolder temp = (RecyclerView_Order_History.ViewHolder) holder;
         //15:00 in video
         ((ViewHolder) holder).order_date.setText(items.get(position).orderDate);
-        ((ViewHolder) holder).res_name.setText(items.get(position).restaurant_name);
+        ((ViewHolder) holder).order_address.setText(items.get(position).order_address);
+        if (vendor_trigger) {
+            ((ViewHolder) holder).res_name.setText(items.get(position).customer_name);
+        } else
+            ((ViewHolder) holder).res_name.setText(items.get(position).restaurant_name);
         ((ViewHolder) holder).total_price.setText(items.get(position).order_total);
 
         int count = 0;
@@ -69,20 +83,20 @@ public class RecyclerView_Order_History extends RecyclerView.Adapter<RecyclerVie
 
             TextView temp1 = new TextView(context);
             temp1.setText(items.get(position).items.get(i).name);
-            Log.d(TAG,i + "Name: " + items.get(position).items.get(i).name);
+            Log.d(TAG, i + "Name: " + items.get(position).items.get(i).name);
             //temp1.setTypeface(null, Typeface.BOLD);
             temp1.setGravity(Gravity.CENTER);
             temp1.setLayoutParams(textViewParam);
 
             TextView temp2 = new TextView(context);
             temp2.setText(items.get(position).items.get(i).price);
-            Log.d(TAG,i + "Price: " + items.get(position).items.get(i).price);
+            Log.d(TAG, i + "Price: " + items.get(position).items.get(i).price);
             //temp2.setTypeface(null, Typeface.BOLD);
             temp2.setGravity(Gravity.CENTER);
             temp2.setLayoutParams(textViewParam);
 
             TextView temp3 = new TextView(context);
-            Log.d(TAG,i + "Quantity: " + items.get(position).items.get(i).quantity);
+            Log.d(TAG, i + "Quantity: " + items.get(position).items.get(i).quantity);
             temp3.setText(Integer.toString(items.get(position).items.get(i).quantity));
             //temp3.setTypeface(null, Typeface.BOLD);
             temp3.setGravity(Gravity.CENTER);
@@ -111,6 +125,7 @@ public class RecyclerView_Order_History extends RecyclerView.Adapter<RecyclerVie
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView order_date;
+        TextView order_address;
         TextView res_name;
         TextView total_price;
         TableLayout order_items;
@@ -119,6 +134,7 @@ public class RecyclerView_Order_History extends RecyclerView.Adapter<RecyclerVie
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             order_date = itemView.findViewById(R.id.order_date);
+            order_address = itemView.findViewById(R.id.order_address);
             res_name = itemView.findViewById(R.id.rest_name);
             total_price = itemView.findViewById(R.id.order_price);
             order_items = itemView.findViewById(R.id.order_items);

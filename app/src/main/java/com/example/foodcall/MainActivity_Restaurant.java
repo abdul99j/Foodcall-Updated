@@ -49,6 +49,15 @@ public class MainActivity_Restaurant extends AppCompatActivity {
         });
 
 
+        Button more = findViewById(R.id.more_res_main);
+        more.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), More_Menu_RestaurantMain.class);
+                startActivity(i);
+            }
+        });
+
         //Logout btn
         Button btn = findViewById(R.id.button4);
         btn.setOnTouchListener(new View.OnTouchListener() {

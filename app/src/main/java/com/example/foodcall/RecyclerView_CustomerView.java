@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -82,7 +83,11 @@ public class RecyclerView_CustomerView extends RecyclerView.Adapter<RecyclerView
 
         final Data obj = filter_list.get(position);
 
-        ((RecyclerView_CustomerView.ViewHolder) holder).image.setBackgroundResource(obj.getImage_Recycle());
+//        if (obj.getImage_Recycle().equals(null))
+//            ((RecyclerView_CustomerView.ViewHolder) holder).image.setBackgroundResource(R.drawable.kfc);
+//        else
+        ((ViewHolder) holder).image.setImageBitmap(obj.getImage_Recycle());
+//        Glide.with(context).load(obj.getImage_Recycle()).into(((ViewHolder) holder).image);
         ((RecyclerView_CustomerView.ViewHolder) holder).res_name.setText(obj.getName());
         ((RecyclerView_CustomerView.ViewHolder) holder).delivery_price.setText(obj.getPrice());
         ((RecyclerView_CustomerView.ViewHolder) holder).layout_Parent.setOnClickListener(new View.OnClickListener() {

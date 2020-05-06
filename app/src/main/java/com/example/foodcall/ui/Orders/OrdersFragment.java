@@ -24,6 +24,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -55,7 +56,10 @@ public class OrdersFragment extends Fragment {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         uid = mAuth.getCurrentUser().getUid();
         FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = mFirebaseDatabase.getReference().child("users").child(uid).child("my_orders");
+        Query myRef = mFirebaseDatabase.getReference().child("users")
+                    .child(uid).child("my_orders").orderByChild("my_orders");
+
+        //Work on orderBy query
 
         myRef.addValueEventListener(new ValueEventListener() {
             @Override

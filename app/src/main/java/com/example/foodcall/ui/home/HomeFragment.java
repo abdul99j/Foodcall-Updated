@@ -1,7 +1,12 @@
 package com.example.foodcall.ui.home;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.ImageDecoder;
 import android.graphics.PorterDuff;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,6 +41,8 @@ import com.example.foodcall.R;
 import com.example.foodcall.RecyclerView_CustomerView;
 import com.example.foodcall.RecyclerView_Restaurant;
 import com.example.foodcall.User;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -43,6 +50,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +70,9 @@ public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
     private ImageView imageView;
+
+    Bitmap image = null;
+    ProgressDialog load;
     //String uid;
 
     View root;
@@ -83,7 +95,10 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        Log.d(TAG,"Inside onCreate");
+        load = new ProgressDialog(getActivity());
+        load.setMessage("Loading...");
+
+        Log.d(TAG, "Inside onCreate");
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         //uid = mAuth.getCurrentUser().getUid();
@@ -93,7 +108,7 @@ public class HomeFragment extends Fragment {
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(TAG,"onDataChanged called for Users");
+                Log.d(TAG, "onDataChanged called for Users");
                 all_users.clear();
                 list.clear();
                 showUserData(dataSnapshot);
@@ -150,11 +165,11 @@ public class HomeFragment extends Fragment {
             }
         });
 
-
+        load.dismiss();
     }
 
     private void showUserData(DataSnapshot dataSnapshot) {
-        Log.d(TAG,"inside showUserData");
+        Log.d(TAG, "inside showUserData");
         for (DataSnapshot ds : dataSnapshot.getChildren()) {
             User temp = new User();
             temp = ds.getValue(User.class);
@@ -166,13 +181,55 @@ public class HomeFragment extends Fragment {
     }
 
     private void populateDataForRecyclerView() {
-        for (User user : all_users) {
-            Log.d(TAG,"inside populateDataForRecycler() : Found user: " + user.getUID());
-            if (user.getCustomer() == false)
-            {
-                Log.d(TAG,"inside populateDataForRecycler() : Found vendor: " + user.getUID());
-                Data data=new Data();
-                data.setImage_Recycle(R.drawable.kfc);
+        for (final User user : all_users) {
+            Log.d(TAG, "inside populateDataForRecycler() : Found user: " + user.getUID());
+            if (user.getCustomer() == false) {
+                Log.d(TAG, "inside populateDataForRecycler() : Found vendor: " + user.getUID());
+                Data data = new Data();
+
+                FirebaseStorage store = FirebaseStorage.getInstance();
+                StorageReference image_ref = store.getReference()
+                        .child("images").child("users")
+                        .child("Gzri1BqpCzPLfM9cQ4W3kstT0lC3").child("header.jpg");
+                Log.d(TAG, " : Found reference for image in FireBase Storage");
+
+                if (image_ref != null) {
+//                    image_ref.getBytes(2 * 1024 * 1024)
+//                            .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+//                                @Override
+//                                public void onSuccess(byte[] bytes) {
+//                                    Bitmap temp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+//                                    setBitmap(temp);
+//                                    Log.d(TAG, "Image Read Successful for " + user.getUID() +
+//                                            "with Uri: " + temp.toString());
+//                                }
+//                            }).addOnFailureListener(new OnFailureListener() {
+//                        @Override
+//                        public void onFailure(@NonNull Exception e) {
+//                            //Bitmap temp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+//                            Bitmap temp = null;
+//                            setBitmap(temp);
+//                            Log.d(TAG, "Image Read Failed for " + user.getUID());
+//                        }
+//                    });
+
+
+//                    image_ref.getDownloadUrl()
+//                            .addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                                @Override
+//                                public void onSuccess(Uri uri) {
+//                                    Log.d(TAG, "Image Read Successful for " + user.getUID() +
+//                                            "with Uri: " + uri.toString());
+//                                }
+//                            }).addOnFailureListener(new OnFailureListener() {
+//                        @Override
+//                        public void onFailure(@NonNull Exception e) {
+//
+//                        }
+//                    });
+                }
+
+                data.setImage_Recycle(image);
                 data.setName(user.getName());
                 data.setPrice("Free Delivery");
                 data.setVendor_UID(user.getUID());
@@ -180,6 +237,10 @@ public class HomeFragment extends Fragment {
             }
         }
         initRecyclerView(root);
+    }
+
+    void setBitmap(Bitmap temp) {
+        image = temp;
     }
 }
 

@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -13,7 +14,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SplashScreen"></activity>
+        <activity android:name=".add_Image"></activity>
+        <activity android:name=".Orders_Vendor" />
+        <activity android:name=".More_Menu_RestaurantMain" />
+        <activity android:name=".SplashScreen" />
         <activity android:name=".AddRestaurantItem" />
         <activity android:name=".MainActivity_Restaurant" />
         <activity android:name=".Checkout" />

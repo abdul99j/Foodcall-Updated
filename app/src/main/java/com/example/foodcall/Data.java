@@ -1,7 +1,9 @@
 package com.example.foodcall;
 
+import android.graphics.Bitmap;
+
 public class Data {
-    private Integer image_Recycle;
+    private Bitmap image_Recycle;
     private String name;
     private String price;
     private String vendor_UID;
@@ -10,7 +12,7 @@ public class Data {
 
     }
 
-    public Data(Integer image_Recycle, String name, String price) {
+    public Data(Bitmap image_Recycle, String name, String price) {
         this.image_Recycle = image_Recycle;
         this.name = name;
         this.price = price;
@@ -24,11 +26,11 @@ public class Data {
         this.vendor_UID = vendor_UID;
     }
 
-    public Integer getImage_Recycle() {
+    public Bitmap getImage_Recycle() {
         return image_Recycle;
     }
 
-    public void setImage_Recycle(Integer image_Recycle) {
+    public void setImage_Recycle(Bitmap image_Recycle) {
         this.image_Recycle = image_Recycle;
     }
 
