@@ -19,8 +19,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity_Restaurant extends AppCompatActivity {
 
@@ -83,6 +86,12 @@ public class MainActivity_Restaurant extends AppCompatActivity {
             public void onClick(View v) {
                 FirebaseAuth mAuth = FirebaseAuth.getInstance();
                 mAuth.signOut();
+                DB_Helper helper = OpenHelperManager.getHelper(getApplicationContext(), DB_Helper.class);
+                RuntimeExceptionDao<User, Integer> myContactDao = helper.getContactRuntimeDao();
+
+                List<User> users = myContactDao.queryForAll();
+                myContactDao.delete(users);
+                OpenHelperManager.releaseHelper();
                 Intent i = new Intent(getApplicationContext(), Login_SignUp.class);
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

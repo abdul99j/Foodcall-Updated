@@ -13,9 +13,15 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.example.foodcall.DB_Helper;
 import com.example.foodcall.Login_SignUp;
 import com.example.foodcall.R;
+import com.example.foodcall.User;
 import com.google.firebase.auth.FirebaseAuth;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
+
+import java.util.List;
 
 public class logoutFragment extends Fragment {
 
@@ -25,6 +31,14 @@ public class logoutFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         mAuth.signOut();
+
+        DB_Helper helper = OpenHelperManager.getHelper(getActivity(), DB_Helper.class);
+        RuntimeExceptionDao<User, Integer> myContactDao = helper.getContactRuntimeDao();
+
+        List<User> users = myContactDao.queryForAll();
+        myContactDao.delete(users);
+        OpenHelperManager.releaseHelper();
+
         Intent i = new Intent(getActivity(), Login_SignUp.class);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -200,6 +200,11 @@ public class HomeFragment extends Fragment {
                         }
                     });
                 }
+                data.setImage_Recycle(null);
+                data.setName(user.getName());
+                data.setPrice("Free Delivery");
+                data.setVendor_UID(user.getUID());
+                list.add(data);
             }
             i++;
         }

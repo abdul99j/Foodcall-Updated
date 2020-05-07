@@ -64,12 +64,14 @@ public class Login_SignUp extends AppCompatActivity {
                 if (user.getUID().contentEquals(mAuth.getCurrentUser().getUid())) {
                     if (user.getCustomer()) {
                         Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                        //i.putExtra("bool","true");
+                        i.putExtra("user_name", user.name);
+                        i.putExtra("user_email", mAuth.getCurrentUser().getEmail());
                         startActivity(i);
                         finish();
                     } else {
                         Intent i = new Intent(getApplicationContext(), MainActivity_Restaurant.class);
-                        //i.putExtra("bool","true");
+                        i.putExtra("user_name", user.name);
+                        i.putExtra("user_email", mAuth.getCurrentUser().getEmail());
                         startActivity(i);
                         finish();
                     }

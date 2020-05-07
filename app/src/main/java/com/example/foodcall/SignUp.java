@@ -18,6 +18,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,6 +30,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
@@ -37,7 +42,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference myRef;
 
-    String name, phone, address;
+    String name, phone, address, uid;
     String city_name = null;
     Boolean customer;
 
@@ -125,6 +130,27 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                                     if (task.isSuccessful()) {
                                         Log.d("SignUpMe", "User created");
                                         FirebaseUser user = mAuth.getCurrentUser();
+                                        uid = user.getUid();
+                                        String deviceToken = FirebaseInstanceId.getInstance().getId();
+
+                                        myRef.child(uid).child("device_token")
+                                                .setValue(deviceToken)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        Toast.makeText(getApplicationContext(), "Device token added"
+                                                                , Toast.LENGTH_SHORT).show();
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Toast.makeText(getApplicationContext(), "Device token" +
+                                                                        "not added. Please retry login."
+                                                                , Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+
                                         updateUI(user);
                                     } else {
                                         updateUI(null);
@@ -174,6 +200,9 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
             User new_user = new User(name, phone, address, city_name, customer);
             myRef.child("users").child(userId).setValue(new_user);
 
+            addToDB(userId, new_user.getName(), new_user.getPhone(), new_user.getAddress(),
+                    new_user.getCity(), new_user.getCustomer());
+
             if (customer == true) {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -186,5 +215,14 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                 startActivity(intent);
             }
         }
+    }
+
+    private void addToDB(String UID, String name, String phone, String address, String city, Boolean customer) {
+        DB_Helper helper = OpenHelperManager.getHelper(getApplicationContext(), DB_Helper.class);
+        RuntimeExceptionDao<User, Integer> myContactDao = helper.getContactRuntimeDao();
+
+        myContactDao.create(new User(UID, name, phone, address, city, customer));
+        Log.d(TAG, " : User added to local db.");
+        OpenHelperManager.releaseHelper();
     }
 }

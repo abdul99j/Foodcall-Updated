@@ -27,6 +27,9 @@
     <string name="prompt_name">Name</string>
     <string name="MyVouchers">My Vouchers</string>
 
+    <string name="nav_logged_name"></string>
+
+
     <string-array name="cities">
         <item>Lahore</item>
         <item>Islamabad</item>

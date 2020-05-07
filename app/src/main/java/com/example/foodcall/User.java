@@ -3,6 +3,8 @@ package com.example.foodcall;
 import com.j256.ormlite.field.DatabaseField;
 
 public class User {
+    @DatabaseField(generatedId = true)
+    int id;
     @DatabaseField
     String UID;
     @DatabaseField
@@ -88,7 +90,9 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", UID='" + UID + '\'' +
+                ", name='" + name + '\'' +
                 ", phone='" + phone + '\'' +
                 ", address='" + address + '\'' +
                 ", city='" + city + '\'' +

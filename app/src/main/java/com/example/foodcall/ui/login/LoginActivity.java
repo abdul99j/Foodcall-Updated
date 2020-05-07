@@ -38,6 +38,8 @@ import com.example.foodcall.ui.home.HomeFragment;
 import com.example.foodcall.ui.login.LoginViewModel;
 import com.example.foodcall.ui.login.LoginViewModelFactory;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -47,6 +49,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
@@ -59,8 +62,8 @@ public class LoginActivity extends AppCompatActivity {
     private LoginViewModel loginViewModel;
 
     private FirebaseAuth mAuth;
-    private FirebaseUser user;
-    private ProgressBar bar;
+    FirebaseDatabase mFirebaseDatabase;
+    DatabaseReference myRef;
 
     List<User> user_data = new ArrayList<>();
 
@@ -114,12 +117,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 setResult(Activity.RESULT_OK);
 
-                //Complete and destroy login activity once successful
-//                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                startActivity(intent);
-//                finish();
             }
         });
 
@@ -154,23 +151,16 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = mFirebaseDatabase.getReference().child("users");
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        myRef = mFirebaseDatabase.getReference().child("users");
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-//                User value = dataSnapshot.getValue(User.class);
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     User data = new User();
-//                    data.setName(ds.child(uid).getValue(User.class).getName());
-//                    data.setCustomer(ds.child(uid).getValue(User.class).getCustomer());
                     data = ds.getValue(User.class);
                     data.setUID(ds.getKey());
-
                     user_data.add(data);
-
                     Log.d(TAG, "Inside ValueEventListener " + data.getUID() + " " + data.getName() + " " + data.getCustomer());
                 }
             }
@@ -208,11 +198,6 @@ public class LoginActivity extends AppCompatActivity {
                 loginViewModel.login(usernameEditText.getText().toString(),
                         passwordEditText.getText().toString());
 
-//                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                startActivity(intent);
-
                 String email = usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
                 mAuth = FirebaseAuth.getInstance();
@@ -225,6 +210,26 @@ public class LoginActivity extends AppCompatActivity {
                                     Log.d(TAG, "signInWithEmail:success");
                                     FirebaseUser user = mAuth.getCurrentUser();
                                     uid = user.getUid();
+                                    String deviceToken = FirebaseInstanceId.getInstance().getId();
+
+                                    myRef.child(uid).child("device_token")
+                                            .setValue(deviceToken)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Toast.makeText(getApplicationContext(), "Device token added"
+                                                            , Toast.LENGTH_SHORT).show();
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Toast.makeText(getApplicationContext(), "Device token" +
+                                                                    "not added. Please retry login."
+                                                            , Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+
                                     updateUI(user);
                                 } else {
                                     // If sign in fails, display a message to the user.
@@ -254,7 +259,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void updateUI(FirebaseUser _user) {
-        user = _user;
+//        user = _user;
         uid = _user.getUid();
         if (_user == null) {
             Toast.makeText(getApplicationContext(), "Login Authentication Failed! Retry.", Toast.LENGTH_SHORT).show();
@@ -272,13 +277,13 @@ public class LoginActivity extends AppCompatActivity {
             Log.d(TAG, "in updateUI : Checking customer bool: " + customer + " UID : " + uid);
             if (customer == true) {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                intent.putExtra("bool","true");
+                intent.putExtra("bool", "true");
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             } else {
                 Intent intent = new Intent(getApplicationContext(), MainActivity_Restaurant.class);
-                intent.putExtra("bool","false");
+                intent.putExtra("bool", "false");
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
@@ -291,6 +296,7 @@ public class LoginActivity extends AppCompatActivity {
         RuntimeExceptionDao<User, Integer> myContactDao = helper.getContactRuntimeDao();
 
         myContactDao.create(new User(UID, name, phone, address, city, customer));
+        Log.d(TAG, " : User added to local db.");
         OpenHelperManager.releaseHelper();
     }
 

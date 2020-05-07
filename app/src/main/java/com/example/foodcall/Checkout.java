@@ -1,9 +1,11 @@
 package com.example.foodcall;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -14,6 +16,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -22,6 +26,7 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class Checkout extends AppCompatActivity {
@@ -35,6 +40,9 @@ public class Checkout extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference myRef;
+    private DatabaseReference notificationRef;
+
+    private ProgressDialog placing_order;
 
     String uid;
     String u_name;
@@ -114,9 +122,11 @@ public class Checkout extends AppCompatActivity {
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Placing your order...",
-                        Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(), "Placing your order...",
+//                        Toast.LENGTH_SHORT).show();
 
+                placing_order = new ProgressDialog(Checkout.this);
+                placing_order.setMessage("Placing your order");
                 //Show temporary screen
 
                 Order order = new Order();
@@ -151,7 +161,32 @@ public class Checkout extends AppCompatActivity {
                 myRef.push().setValue(order);
 
                 myRef = mFirebaseDatabase.getReference().child("users").child(vid).child("my_orders");
-                myRef.push().setValue(order);
+                myRef.push().setValue(order)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                placing_order.dismiss();
+                                Toast.makeText(getApplicationContext(), "Order placed successfully"
+                                        , Toast.LENGTH_SHORT).show();
+                                HashMap<String, String> temp = new HashMap<>();
+                                temp.put("from", uid);
+                                temp.put("type", "Order");
+
+                                notificationRef = mFirebaseDatabase.getReference().child("Notifications")
+                                        .child(vid);
+                                notificationRef.push().setValue(temp);
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                placing_order.dismiss();
+                                Toast.makeText(getApplicationContext(), "Something went wrong. Try again!"
+                                        , Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+
 //
                 myRef = mFirebaseDatabase.getReference().child("users").child(uid).child("my_orders");
                 myRef.push().setValue(order);

@@ -13,8 +13,8 @@ import java.sql.SQLException;
 
 public class DB_Helper extends OrmLiteSqliteOpenHelper {
 
-    private static final String DataBase_Name = "User_ListView.db";
-    private static int DataBase_Version = 1;
+    private static final String DataBase_Name = "User.db";
+    private static int DataBase_Version = 2;
     private SQLiteDatabase sqLiteDatabase;
 
     private Dao<User, Integer> contactDao = null;

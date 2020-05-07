@@ -31,9 +31,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
+import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity  {
+public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
 
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity  {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,6 +58,17 @@ public class MainActivity extends AppCompatActivity  {
         });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
+
+        Intent i = getIntent();
+        Bundle extras = i.getExtras();
+        View headerView = navigationView.getHeaderView(0);
+
+        //Setting username and email in nav_header_main
+        TextView user_name = headerView.findViewById(R.id.name_nav);
+        user_name.setText(extras.getString("user_name"));
+
+        TextView user_email=headerView.findViewById(R.id.email_nav);
+        user_email.setText(extras.getString("user_email"));
 
         // Passing each menu_class ID as a set of Ids because each
         // menu_class should be considered as top level destinations.

@@ -10,7 +10,7 @@ public class logoutViewModel extends ViewModel {
 
     public logoutViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("Logging out!");
+        mText.setValue("");
     }
 
     public LiveData<String> getText() {
