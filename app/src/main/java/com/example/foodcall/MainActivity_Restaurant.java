@@ -12,6 +12,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.foodcall.Notification.Token;
+import com.example.foodcall.ui.login.LoginActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -19,6 +21,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
@@ -99,6 +102,7 @@ public class MainActivity_Restaurant extends AppCompatActivity {
             }
         });
 
+        updateToken(LoginActivity.dev_token);
         initData();
     }
 
@@ -126,6 +130,12 @@ public class MainActivity_Restaurant extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void updateToken(String token) {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Token");
+        Token mtoken = new Token(token);
+        ref.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(mtoken);
     }
 
     private void showData(DataSnapshot dataSnapshot) {

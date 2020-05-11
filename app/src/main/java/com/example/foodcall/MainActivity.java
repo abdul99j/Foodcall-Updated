@@ -4,7 +4,9 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.foodcall.Notification.Token;
 import com.example.foodcall.ui.Orders.OrdersFragment;
+import com.example.foodcall.ui.login.LoginActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -24,6 +26,9 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -67,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         TextView user_name = headerView.findViewById(R.id.name_nav);
         user_name.setText(extras.getString("user_name"));
 
-        TextView user_email=headerView.findViewById(R.id.email_nav);
+        TextView user_email = headerView.findViewById(R.id.email_nav);
         user_email.setText(extras.getString("user_email"));
 
         // Passing each menu_class ID as a set of Ids because each
@@ -92,7 +97,15 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
+
+        updateToken(LoginActivity.dev_token);
         //setNavigationViewListener();
+    }
+
+    public void updateToken(String token) {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Token");
+        Token mtoken = new Token(token);
+        ref.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(mtoken);
     }
 
     @Override

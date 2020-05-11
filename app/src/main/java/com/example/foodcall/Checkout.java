@@ -16,18 +16,41 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.example.foodcall.Notification.APIService;
+import com.example.foodcall.Notification.Client;
+import com.example.foodcall.Notification.Data;
+import com.example.foodcall.Notification.Response;
+import com.example.foodcall.Notification.Sender;
+import com.example.foodcall.Notification.Token;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
 
 public class Checkout extends AppCompatActivity {
 
@@ -52,6 +75,17 @@ public class Checkout extends AppCompatActivity {
 
     static TextView tv;
 
+    final private String FCM_API = "https://fcm.googleapis.com/fcm/send";
+    final private String serverKey = "key=" + "AAAA1POMuGg:APA91bGrcQ72R4w2xaLiPwVn0HXy-O5oi5uZy3B4MhRmIwsLPPq-xAdk7UNjJEMm_EUiVNMgCuElrt-lMYPKo1DZ9TL28fs39z2eTCxzYuqCK72fUSHH-40TE-MhRiW7j0XdLc7SWx5k";
+    final private String contentType = "application/json";
+
+    String NOTIFICATION_TITLE;
+    String NOTIFICATION_MESSAGE;
+    String TOPIC;
+
+    APIService apiService;
+    Boolean notify = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +93,7 @@ public class Checkout extends AppCompatActivity {
         setContentView(R.layout.activity_checkout);
 
         mAuth = FirebaseAuth.getInstance();
+
         uid = mAuth.getCurrentUser().getUid();
         if (mAuth.getCurrentUser() != null) {
             DB_Helper helper = OpenHelperManager.getHelper(this, DB_Helper.class);
@@ -168,13 +203,13 @@ public class Checkout extends AppCompatActivity {
                                 placing_order.dismiss();
                                 Toast.makeText(getApplicationContext(), "Order placed successfully"
                                         , Toast.LENGTH_SHORT).show();
-                                HashMap<String, String> temp = new HashMap<>();
-                                temp.put("from", uid);
-                                temp.put("type", "Order");
-
-                                notificationRef = mFirebaseDatabase.getReference().child("Notifications")
-                                        .child(vid);
-                                notificationRef.push().setValue(temp);
+//                                HashMap<String, String> temp = new HashMap<>();
+//                                temp.put("from", uid);
+//                                temp.put("type", "Order");
+//
+//                                notificationRef = mFirebaseDatabase.getReference().child("Notifications")
+//                                        .child(vid);
+//                                notificationRef.push().setValue(temp);
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
@@ -186,10 +221,44 @@ public class Checkout extends AppCompatActivity {
                             }
                         });
 
-
-//
                 myRef = mFirebaseDatabase.getReference().child("users").child(uid).child("my_orders");
                 myRef.push().setValue(order);
+
+                apiService = Client.getRetrofit("https://fcm.googleapis.com/").create(APIService.class);
+
+                DatabaseReference allToken = FirebaseDatabase.getInstance().getReference("Token").child(vid);
+                allToken.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                            String token = ds.getValue().toString();
+
+                            Log.d(TAG," got Token for vendor : " + token);
+
+                            Data data = new Data(uid, "You have got an order", "New Order", vid, R.drawable.logo);
+                            Sender sender = new Sender(data, token);
+
+                            apiService.sendNotification(sender)
+                                    .enqueue(new Callback<Response>() {
+                                        @Override
+                                        public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
+                                            Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_SHORT)
+                                                    .show();
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<Response> call, Throwable t) {
+
+                                        }
+                                    });
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
 
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.putExtra("bool", "true");

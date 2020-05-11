@@ -50,6 +50,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
@@ -69,6 +70,7 @@ public class LoginActivity extends AppCompatActivity {
 
     Boolean customer = false;
     String uid;
+    public static String dev_token;
     DB_Helper helper;
 
     @Override
@@ -210,26 +212,40 @@ public class LoginActivity extends AppCompatActivity {
                                     Log.d(TAG, "signInWithEmail:success");
                                     FirebaseUser user = mAuth.getCurrentUser();
                                     uid = user.getUid();
-                                    String deviceToken = FirebaseInstanceId.getInstance().getId();
+                                    //String deviceToken = FirebaseInstanceId.getInstance().getId();
 
-                                    myRef.child(uid).child("device_token")
-                                            .setValue(deviceToken)
-                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    FirebaseInstanceId.getInstance().getInstanceId()
+                                            .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
                                                 @Override
-                                                public void onSuccess(Void aVoid) {
-                                                    Toast.makeText(getApplicationContext(), "Device token added"
-                                                            , Toast.LENGTH_SHORT).show();
-                                                }
-                                            })
-                                            .addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    Toast.makeText(getApplicationContext(), "Device token" +
-                                                                    "not added. Please retry login."
-                                                            , Toast.LENGTH_SHORT).show();
+                                                public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                                                    if (!task.isSuccessful()) {
+                                                        return;
+                                                    }
+                                                    dev_token = task.getResult().getToken();
+                                                    //String msg = getString(R.string.fcm_token, token);
+                                                    Log.d(TAG, "new method: " + dev_token);
+
+                                                    myRef.child(uid).child("device_token")
+                                                            .setValue(dev_token)
+                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                @Override
+                                                                public void onSuccess(Void aVoid) {
+                                                                    Toast.makeText(getApplicationContext(), "Device token added"
+                                                                            , Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            })
+                                                            .addOnFailureListener(new OnFailureListener() {
+                                                                @Override
+                                                                public void onFailure(@NonNull Exception e) {
+                                                                    Toast.makeText(getApplicationContext(), "Device token" +
+                                                                                    "not added. Please retry login."
+                                                                            , Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            });
+
+
                                                 }
                                             });
-
                                     updateUI(user);
                                 } else {
                                     // If sign in fails, display a message to the user.

@@ -17,6 +17,8 @@ public class User {
     String city;
     @DatabaseField
     Boolean customer;
+    @DatabaseField
+    String image_header;
 
     public User() {
 
@@ -28,6 +30,24 @@ public class User {
 
     public void setUID(String UID) {
         this.UID = UID;
+    }
+
+    public String getImage_header() {
+        return image_header;
+    }
+
+    public void setImage_header(String image_header) {
+        this.image_header = image_header;
+    }
+
+    public User(String UID, String name, String phone, String address, String city, Boolean customer, String image_header) {
+        this.UID = UID;
+        this.name = name;
+        this.phone = phone;
+        this.address = address;
+        this.city = city;
+        this.customer = customer;
+        this.image_header = image_header;
     }
 
     public User(String UID, String name, String phone, String address, String city, Boolean customer) {

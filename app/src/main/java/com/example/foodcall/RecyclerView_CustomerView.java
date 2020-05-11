@@ -22,6 +22,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +67,7 @@ public class RecyclerView_CustomerView extends RecyclerView.Adapter<RecyclerView
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
         Log.d(TAG, "onBindViewHolder: called");
 
-        RecyclerView_CustomerView.ViewHolder temp = (RecyclerView_CustomerView.ViewHolder) holder;
+        ViewHolder temp = (ViewHolder) holder;
 
 //        byte[] imageBytes = Base64.decode(image_Recycle.get(position), Base64.DEFAULT);
 //        Bitmap decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
@@ -84,10 +85,11 @@ public class RecyclerView_CustomerView extends RecyclerView.Adapter<RecyclerView
         final Data obj = filter_list.get(position);
 
         Log.d(TAG, "image loading with URI: " + obj.getImage_Recycle());
-        Glide.with(context).load(obj.getImage_Recycle()).into(((ViewHolder) holder).image);
-        ((RecyclerView_CustomerView.ViewHolder) holder).res_name.setText(obj.getName());
-        ((RecyclerView_CustomerView.ViewHolder) holder).delivery_price.setText(obj.getPrice());
-        ((RecyclerView_CustomerView.ViewHolder) holder).layout_Parent.setOnClickListener(new View.OnClickListener() {
+        Picasso.get().load(obj.getImage_Recycle()).into(((ViewHolder) holder).image);
+//        Glide.with(context).load(obj.getImage_Recycle()).into(((ViewHolder) holder).image);
+        ((ViewHolder) holder).res_name.setText(obj.getName());
+        ((ViewHolder) holder).delivery_price.setText(obj.getPrice());
+        ((ViewHolder) holder).layout_Parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "on Click: clicked on: " + obj.getName());
