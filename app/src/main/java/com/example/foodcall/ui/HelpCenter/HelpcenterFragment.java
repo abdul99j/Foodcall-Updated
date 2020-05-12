@@ -24,12 +24,12 @@ public class HelpcenterFragment extends Fragment {
                 ViewModelProviders.of(this).get(HelpcenterViewModel.class);
         View root = inflater.inflate(R.layout.fragment_helpcenter, container, false);
         final TextView textView = root.findViewById(R.id.helpcenter);
-        helpcenterViewModel.getText().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
+//        helpcenterViewModel.getText().observe(this, new Observer<String>() {
+//            @Override
+//            public void onChanged(@Nullable String s) {
+//                textView.setText(s);
+//            }
+//        });
         return root;
     }
 }

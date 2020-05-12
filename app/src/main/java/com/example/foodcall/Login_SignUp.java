@@ -5,13 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 
+import com.example.foodcall.Database.DB_Helper;
+import com.example.foodcall.Restaurant.MainActivity_Restaurant;
 import com.example.foodcall.ui.login.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.j256.ormlite.android.apptools.OpenHelperManager;

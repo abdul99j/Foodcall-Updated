@@ -23,12 +23,12 @@ public class AboutUsFragment extends Fragment {
                 ViewModelProviders.of(this).get(AboutUsViewModel.class);
         View root = inflater.inflate(R.layout.fragment_aboutus, container, false);
         final TextView textView = root.findViewById(R.id.aboutus);
-        sendViewModel.getText().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
+//        sendViewModel.getText().observe(this, new Observer<String>() {
+//            @Override
+//            public void onChanged(@Nullable String s) {
+//                textView.setText(s);
+//            }
+//        });
         return root;
     }
 }

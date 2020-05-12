@@ -29,6 +29,21 @@
 
     <string name="nav_logged_name"></string>
 
+    <string name="account">My Account</string>
+
+    <string name="order">How to Order</string>
+    <string name="payment">Making a Payment</string>
+
+    <string name="account_info">You have to login using your foodcall email id and password.</string>
+    <string name="order_info">You have to select the restaurant from where you want to order along with the food
+        and then move to cart to proceed for your order.
+    </string>
+    <string name="payment_info">You can either pay using your credit/debit card or cash on delivery.</string>
+
+    <string name="aboutus_info">Contact:\n\nLive Chat|Chat with us\nsupport@foocall.pk\n\nDo you want
+    to write about foodcall?\nDo you want interviews?\nFeel free to email us at press@foodcall.pk\n\nDo you
+    want to partner with us?\npartner@foodcall.pk</string>
+
 
     <string-array name="cities">
         <item>Lahore</item>

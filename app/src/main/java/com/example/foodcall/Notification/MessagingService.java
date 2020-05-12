@@ -1,6 +1,5 @@
 package com.example.foodcall.Notification;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -10,20 +9,16 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
-import com.example.foodcall.MainActivity_Restaurant;
+import com.example.foodcall.Restaurant.MainActivity_Restaurant;
 import com.example.foodcall.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.example.foodcall.Restaurant.Orders_Vendor;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -55,8 +50,8 @@ public class MessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        Log.e(TAG, "Data: " + remoteMessage.toString());
-        Log.d(TAG, "From: " + remoteMessage.getFrom());
+
+        Log.e(TAG, "From: " + remoteMessage.getData().get("user"));
 
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
@@ -77,7 +72,7 @@ public class MessagingService extends FirebaseMessagingService {
         String user = message.getData().get("user");
         String title = message.getData().get("title");
         String body = message.getData().get("body");
-
+        //Cannot access these values. Why?
 
         String CHANNEL_ID = "my_channel_01";
         CharSequence name = "my_channel";
@@ -99,7 +94,7 @@ public class MessagingService extends FirebaseMessagingService {
             }
         }
 
-        Intent resultIntent = new Intent(this, MainActivity_Restaurant.class);
+        Intent resultIntent = new Intent(this, Orders_Vendor.class);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addParentStack(MainActivity_Restaurant.class);
         stackBuilder.addNextIntent(resultIntent);
@@ -108,7 +103,7 @@ public class MessagingService extends FirebaseMessagingService {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Foodcall")
-                .setContentText(body)
+                .setContentText("Yayy! You have a new order.")
                 .setSmallIcon(R.drawable.logo)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(resultPendingIntent)

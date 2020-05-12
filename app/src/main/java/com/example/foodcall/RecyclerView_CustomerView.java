@@ -9,19 +9,14 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.example.foodcall.Menu.Menu;
+import com.example.foodcall.Restaurant.Data;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -44,7 +39,7 @@ public class RecyclerView_CustomerView extends RecyclerView.Adapter<RecyclerView
         this.context = context;
     }
 
-    //    public RecyclerView_CustomerView(Data list, Context context) {
+    //    public RecyclerView_CustomerView(Data_Notification list, Context context) {
 ////        this.image_Recycle = image_Recycle;
 ////        this.image_Name = image_Name;
 ////        this.image_Price = image_Price;

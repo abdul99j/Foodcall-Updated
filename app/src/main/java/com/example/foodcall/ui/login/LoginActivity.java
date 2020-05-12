@@ -7,6 +7,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 
@@ -14,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -21,22 +23,17 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.foodcall.DB_Helper;
-import com.example.foodcall.Item;
+import com.example.foodcall.Database.DB_Helper;
 import com.example.foodcall.MainActivity;
-import com.example.foodcall.MainActivity_Restaurant;
+import com.example.foodcall.Restaurant.MainActivity_Restaurant;
 import com.example.foodcall.R;
 import com.example.foodcall.User;
-import com.example.foodcall.ui.home.HomeFragment;
-import com.example.foodcall.ui.login.LoginViewModel;
-import com.example.foodcall.ui.login.LoginViewModelFactory;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -222,6 +219,13 @@ public class LoginActivity extends AppCompatActivity {
                                                         return;
                                                     }
                                                     dev_token = task.getResult().getToken();
+
+                                                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                                                    SharedPreferences.Editor editor = prefs.edit();
+                                                    editor.putString("device_token", dev_token);
+                                                    Log.d(TAG, " Device token put to shared preferences");
+                                                    editor.apply();
+
                                                     //String msg = getString(R.string.fcm_token, token);
                                                     Log.d(TAG, "new method: " + dev_token);
 
@@ -276,10 +280,9 @@ public class LoginActivity extends AppCompatActivity {
 
     private void updateUI(FirebaseUser _user) {
 //        user = _user;
-        uid = _user.getUid();
-        if (_user == null) {
-            Toast.makeText(getApplicationContext(), "Login Authentication Failed! Retry.", Toast.LENGTH_SHORT).show();
-        } else {
+
+        if (_user != null) {
+            uid = _user.getUid();
             for (User user : user_data) {
                 if (user.getUID().contentEquals(uid)) {
                     if (user.getCustomer() == true)
@@ -304,6 +307,8 @@ public class LoginActivity extends AppCompatActivity {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }
+        } else {
+            Toast.makeText(getApplicationContext(), "Login Authentication Failed! Retry.", Toast.LENGTH_SHORT).show();
         }
     }
 

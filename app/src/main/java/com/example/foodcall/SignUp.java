@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -17,6 +16,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.foodcall.Database.DB_Helper;
+import com.example.foodcall.Restaurant.MainActivity_Restaurant;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -24,7 +25,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserInfo;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -205,11 +205,15 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
             if (customer == true) {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.putExtra("user_name", new_user.getName());
+                intent.putExtra("user_email", mAuth.getCurrentUser().getEmail());
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             } else {
                 Intent intent = new Intent(getApplicationContext(), MainActivity_Restaurant.class);
+                intent.putExtra("user_name", new_user.getName());
+                intent.putExtra("user_email", mAuth.getCurrentUser().getEmail());
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);

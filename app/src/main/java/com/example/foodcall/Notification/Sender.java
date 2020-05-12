@@ -2,20 +2,20 @@ package com.example.foodcall.Notification;
 
 public class Sender {
 
-    private Data data;
+    private Data_Notification dataNotification;
     String to;
 
-    public Sender(Data data, String to) {
-        this.data = data;
+    public Sender(Data_Notification dataNotification, String to) {
+        this.dataNotification = dataNotification;
         this.to = to;
     }
 
-    public Data getData() {
-        return data;
+    public Data_Notification getDataNotification() {
+        return dataNotification;
     }
 
-    public void setData(Data data) {
-        this.data = data;
+    public void setDataNotification(Data_Notification dataNotification) {
+        this.dataNotification = dataNotification;
     }
 
     public String getTo() {
