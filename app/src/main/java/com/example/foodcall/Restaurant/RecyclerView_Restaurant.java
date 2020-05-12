@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -15,6 +16,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.foodcall.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -61,6 +69,36 @@ public class RecyclerView_Restaurant extends RecyclerView.Adapter<RecyclerView.V
 
         ((ViewHolder) holder).text_name.setText(image_Name.get(position));
         ((ViewHolder) holder).text_price.setText(image_Price.get(position));
+        ((ViewHolder) holder).del_item.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "on Click Delete: clicked on: " + image_Name.get(position)
+                        + " " + image_Recycle.get(position));
+                //FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+                Query applesQuery = ref.child("users")
+                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                        .child("menu")
+                        .orderByChild("name").equalTo(image_Name.get(position));
+
+                applesQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot appleSnapshot : dataSnapshot.getChildren()) {
+                            Log.d(TAG, " Deleted item : " + image_Name.get(position));
+                            appleSnapshot.getRef().removeValue();
+                            Log.e(TAG, " : Entry Deleted for " + appleSnapshot.getKey());
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.e(TAG, "onCancelled", databaseError.toException());
+                    }
+                });
+
+            }
+        });
         ((ViewHolder) holder).layout_Parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,6 +127,7 @@ public class RecyclerView_Restaurant extends RecyclerView.Adapter<RecyclerView.V
         ImageView image;
         TextView text_name;
         TextView text_price;
+        Button del_item;
         RelativeLayout layout_Parent;
 
         public ViewHolder(@NonNull View itemView) {
@@ -96,6 +135,7 @@ public class RecyclerView_Restaurant extends RecyclerView.Adapter<RecyclerView.V
             image = itemView.findViewById(R.id.profile_image);
             text_name = itemView.findViewById(R.id.row_text);
             text_price = itemView.findViewById(R.id.price);
+            del_item = itemView.findViewById(R.id.del_item);
             layout_Parent = itemView.findViewById(R.id.parent);
         }
     }

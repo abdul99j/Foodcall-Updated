@@ -14,7 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Restaurant.About_Us_Restaurant"></activity>
+        <activity android:name=".Restaurant.AddRestaurantItem"></activity>
+        <activity android:name=".Restaurant.About_Us_Restaurant" />
         <activity android:name=".Restaurant.add_Image" />
         <activity android:name=".Restaurant.Orders_Vendor" />
         <activity android:name=".Restaurant.More_Menu_RestaurantMain" />

@@ -113,7 +113,6 @@ public class Menu extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //yahan say arraylist bhej deingay.
                 Intent intent = new Intent(getApplicationContext(), Checkout.class);
 
                 ArrayList<String> selected_name = new ArrayList<>();
