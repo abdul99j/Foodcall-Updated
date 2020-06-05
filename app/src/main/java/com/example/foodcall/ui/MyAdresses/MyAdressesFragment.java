@@ -13,6 +13,8 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.example.foodcall.R;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 public class MyAdressesFragment extends Fragment {
 
@@ -29,6 +31,7 @@ public class MyAdressesFragment extends Fragment {
                 textView.setText(s);
             }
         });
+
         return root;
     }
 }

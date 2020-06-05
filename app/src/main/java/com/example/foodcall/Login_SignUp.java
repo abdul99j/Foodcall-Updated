@@ -12,6 +12,8 @@ import android.widget.Button;
 import com.example.foodcall.Database.DB_Helper;
 import com.example.foodcall.Restaurant.MainActivity_Restaurant;
 import com.example.foodcall.ui.login.LoginActivity;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
@@ -22,6 +24,8 @@ public class Login_SignUp extends AppCompatActivity {
 
     FirebaseAuth mAuth;
     private static int SPLAST_TIME_OUT = 2000;
+    private AdView mAdView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,5 +141,9 @@ public class Login_SignUp extends AppCompatActivity {
             }
         });
 
+
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
     }
 }
