@@ -280,15 +280,17 @@ public class LoginActivity extends AppCompatActivity {
 
     private void updateUI(FirebaseUser _user) {
 //        user = _user;
-
+        String name = null, email;
         if (_user != null) {
             uid = _user.getUid();
             for (User user : user_data) {
                 if (user.getUID().contentEquals(uid)) {
-                    if (user.getCustomer() == true)
+                    if (user.getCustomer() == true) {
                         customer = true;
-                    addToDB(user.getUID(), user.getName(), user.getPhone(), user.getAddress(),
-                            user.getCity(), user.getCustomer());
+                        name = user.getName();
+                        addToDB(user.getUID(), user.getName(), user.getPhone(), user.getAddress(),
+                                user.getCity(), user.getCustomer());
+                    }
                 }
             }
 
@@ -297,6 +299,8 @@ public class LoginActivity extends AppCompatActivity {
             if (customer == true) {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.putExtra("bool", "true");
+                intent.putExtra("user_name", name);
+                intent.putExtra("user_email", _user.getEmail());
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
